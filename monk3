@@ -1,7 +1,7 @@
--- Anti-AFK script
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/luca5432/Roblox-ANTI-AFK-SCRIPT/main/Script", true))()
 
--- Wait for game to load
+
 local function waitForLoad()
     repeat task.wait() until game:IsLoaded()
     game:WaitForChild("ReplicatedStorage")
@@ -11,7 +11,7 @@ local function waitForLoad()
     print("Game loaded")
 end
 
--- Main variables
+
 local player = game.Players.LocalPlayer
 local targetted = player.Name
 local transformStatus = false
@@ -19,13 +19,13 @@ local autoFarmLoopRunning = false
 local flying = false
 local charge = false
 
--- Utility functions
+
 local function getCheckValue()
     local data = game.ReplicatedStorage.Datas[player.UserId]
     return math.min(data.Strength.Value, data.Energy.Value, data.Defense.Value, data.Speed.Value)
 end
 
--- Main functions
+
 local function startGame()
     pcall(function()
         repeat
@@ -65,17 +65,17 @@ local function killKidNohag()
     local myChar = player.Character
     if not myChar or not myChar:FindFirstChild("HumanoidRootPart") then return end
 
-    -- Teleport to Kid Nohag
+
     myChar.HumanoidRootPart.CFrame = kidNohag.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
 
-    -- Attack loop
+
     while kidNohag.Humanoid.Health > 0 and myChar.Humanoid.Health > 0 do
         -- Use attacks
         game:GetService("ReplicatedStorage").Package.Events.mel:InvokeServer("Mach Kick", "Blacknwhite27")
         game:GetService("ReplicatedStorage").Package.Events.mel:InvokeServer("Wolf Fang Fist", "Blacknwhite27")
         game:GetService("ReplicatedStorage").Package.Events.mel:InvokeServer("Meteor Strike", "Blacknwhite27")
         
-        -- Energy attacks
+
         local args = {
             [1] = "Energy Volley",
             [2] = {
@@ -86,7 +86,7 @@ local function killKidNohag()
         }
         game:GetService("ReplicatedStorage").Package.Events.voleys:InvokeServer(unpack(args ))
 
-        -- Multishots
+
         local args = {
             [1] = "Multishots",
             [2] = false,
@@ -102,7 +102,7 @@ local function killKidNohag()
     end
 end
 
--- Main execution
+
 pcall(function()
     waitForLoad()
     startGame()
