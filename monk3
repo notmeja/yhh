@@ -1,0 +1,136 @@
+-- Anti-AFK script
+loadstring(game:HttpGet("https://raw.githubusercontent.com/luca5432/Roblox-ANTI-AFK-SCRIPT/main/Script", true))()
+
+-- Wait for game to load
+local function waitForLoad()
+    repeat task.wait() until game:IsLoaded()
+    game:WaitForChild("ReplicatedStorage")
+    game.ReplicatedStorage:WaitForChild("Datas")
+    local player = game.Players.LocalPlayer
+    game.ReplicatedStorage.Datas:WaitForChild(player.UserId)
+    print("Game loaded")
+end
+
+-- Main variables
+local player = game.Players.LocalPlayer
+local targetted = player.Name
+local transformStatus = false
+local autoFarmLoopRunning = false
+local flying = false
+local charge = false
+
+-- Utility functions
+local function getCheckValue()
+    local data = game.ReplicatedStorage.Datas[player.UserId]
+    return math.min(data.Strength.Value, data.Energy.Value, data.Defense.Value, data.Speed.Value)
+end
+
+-- Main functions
+local function startGame()
+    pcall(function()
+        repeat
+            if workspace[targetted] then
+                game:GetService("ReplicatedStorage").Package.Events.Start:InvokeServer()
+                player.PlayerGui.Main.bruh.Disabled = true
+                player.PlayerGui.Main.bruh.Disabled = false
+            end
+            task.wait()
+        until workspace.Living[targetted]
+    end)
+end
+
+local function autoStack()
+    pcall(function()
+        local data = game.ReplicatedStorage.Datas[player.UserId]
+        if data.Energy.Value > 8000000 and not getgenv().dead then
+            workspace.Living[targetted].UpperTorso:Destroy()
+            task.wait(5)
+            game:GetService("ReplicatedStorage").Package.Events.equipskill:InvokeServer("Godly SSJ2")
+            for i = 1, 8 do
+                game:GetService("ReplicatedStorage").Package.Events.ta:InvokeServer()
+                task.wait()
+            end
+            getgenv().stackneeded = false
+            transformStatus = true
+            autoFarmLoopRunning = true
+            flying = false
+        end
+    end)
+end
+
+local function killKidNohag()
+    local kidNohag = workspace.Living:FindFirstChild("Kid Nohag")
+    if not kidNohag then return end
+
+    local myChar = player.Character
+    if not myChar or not myChar:FindFirstChild("HumanoidRootPart") then return end
+
+    -- Teleport to Kid Nohag
+    myChar.HumanoidRootPart.CFrame = kidNohag.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+
+    -- Attack loop
+    while kidNohag.Humanoid.Health > 0 and myChar.Humanoid.Health > 0 do
+        -- Use attacks
+        game:GetService("ReplicatedStorage").Package.Events.mel:InvokeServer("Mach Kick", "Blacknwhite27")
+        game:GetService("ReplicatedStorage").Package.Events.mel:InvokeServer("Wolf Fang Fist", "Blacknwhite27")
+        game:GetService("ReplicatedStorage").Package.Events.mel:InvokeServer("Meteor Strike", "Blacknwhite27")
+        
+        -- Energy attacks
+        local args = {
+            [1] = "Energy Volley",
+            [2] = {
+                ["FaceMouse"] = false,
+                ["MouseHit"] = kidNohag.HumanoidRootPart.CFrame
+            },
+            [3] = "Blacknwhite27"
+        }
+        game:GetService("ReplicatedStorage").Package.Events.voleys:InvokeServer(unpack(args ))
+
+        -- Multishots
+        local args = {
+            [1] = "Multishots",
+            [2] = false,
+            [3] = {
+                ["FaceMouse"] = true,
+                ["MouseHit"] = kidNohag.HumanoidRootPart.CFrame
+            },
+            [4] = "Blacknwhite27"
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Package"):WaitForChild("Events"):WaitForChild("be"):InvokeServer(unpack(args))
+
+        task.wait(0.5)
+    end
+end
+
+-- Main execution
+pcall(function()
+    waitForLoad()
+    startGame()
+    
+    while true do
+        if getgenv().stackneeded then
+            autoStack()
+        end
+        
+        if not getgenv().dead and autoFarmLoopRunning then
+            if not charge then
+                task.spawn(function()
+                    while autoFarmLoopRunning do
+                        game:GetService("ReplicatedStorage").Package.Events.cha:InvokeServer("Blacknwhite27")
+                        task.wait()
+                    end
+                end)
+                charge = true
+            end
+            
+            if not flying then
+                -- Flying logic here
+                flying = true
+            end
+            
+            killKidNohag()
+        end
+        
+        task.wait()
+    end
+end)
