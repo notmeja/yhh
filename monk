@@ -1205,12 +1205,6 @@ check1()
                                 SelectedMobs1 = SelectedMobs
 
                                 checkValue = getCheckValue()
-                                if checkValue >= 200000000 and game.placeId ~= 5151400895 then
-                                    SelectedQuests, SelectedMobs1 = "SSJG Kakata", "SSJG Kakata"
-                                    local A_1 = "Vills Planet"
-                                    local Event = game:GetService("ReplicatedStorage").Package.Events.TP
-                                    Event:InvokeServer(A_1)
-                                end
 
                                 if game:GetService("ReplicatedStorage").Datas[game.Players.LocalPlayer.UserId].Quest
                                     .Value ~= SelectedQuests then 
@@ -1231,25 +1225,6 @@ check1()
                                 end -- undefine
                                 
                             end
-
-                            if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                                for i, v in ipairs(game:GetService("Workspace").Living:GetChildren()) do
-                                    task.wait()
-
-                                    if v.Name:lower() == SelectedMobs1:lower() and game.Players.LocalPlayer.Character and
-                                        game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and
-                                        v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 or v.Name:lower() == "ssjg kakata" and SelectedMobs1:lower() == "ssjg kakata" then
-                                        task.wait()
-                                        if v.Name:lower() == "ssjg kakata" then
-                                            repeat
-                                                pcall(function()
-                                                    if v.Humanoid.Health > 0 then
-                                                        ssjgalive = true
-                                                    end
-                                                    end)
-                                            wait()
-                                            until ssjgalive == true
-end
                                         
                                         questneeded = false
                                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart
